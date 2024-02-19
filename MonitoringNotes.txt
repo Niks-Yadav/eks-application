@@ -1,0 +1,22 @@
+https://github.com/prometheus-community/helm-charts
+kube-prometheus-stack
+
+1) Install HELM first via below script provided by HELM Community-
+https://helm.sh/docs/intro/install/
+
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+
+2) Install HELM chart for Prometheus -
+helm repo add [Name] [URL]
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm search repo prometheus-community
+
+The chart which we are interested is -
+prometheus-community/kube-prometheus-stack
+
+Install using HELM
+helm install prometheus prometheus-community/kube-prometheus-stack

@@ -1,0 +1,106 @@
+https://github.com/eksctl-io/eksctl
+
+1. Install EKSCTL and AWSCLI -
+eksctl Installation -
+# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+
+ARCH=amd64
+PLATFORM=$(uname -s)_$ARCH
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+sudo mv /tmp/eksctl /usr/local/bin
+
+
+--- Install awscli (With EC2 instance, it comes with awscli)
+aws --version (should be greated that 1.18.86)
+[ec2-user@ip-172-31-45-13 ~]$ aws --version
+aws-cli/1.18.147 Python/2.7.18 Linux/5.10.205-195.807.amzn2.x86_64 botocore/1.18.6
+
+
+or Install awscli version2 which is recommended way -
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+sudo yum remove awscli
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+-------------------------------------------------
+2. Configure AWS Credentials -
+
+Set up a Group with the permissions of:
+
+AmazonEC2FullAccess
+IAMFullAccess
+AWSCloudFormationFullAccess	
+
+Internal policy create named as eksAccess as below-
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": "eks:*",
+			"Resource": "*"
+		},
+		{
+		    "Action": [
+		        "ssm:GetParameter",
+		        "ssm:GetParameters"
+		    ],
+		    "Resource": "*",
+		    "Effect": "Allow"
+		}
+	]
+}
+
+JSON Policy Validator check - https://jsonformatter.curiousconcept.com/#
+
+sg-0e009752a4019d229 (launch-wizard-1)
+--------------------------------------------------------------------------------
+3. Install Kubectl
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+---------------------------------------------------------------------------------
+
+kubectl version --client
+
+4. Create EKS Cluster now -
+eksctl create cluster --name aqtcluster --nodes-min=3
+
+eksctl create cluster --name aqtcluster --region ap-south-1 --nodegroup-name standard-workers --node-type t2.micro --nodes 3 --nodes-min 3 --nodes-max 4 --managed
+
+
+---------------------------------------------------------------------------------------------------------------------
+Operating your cluster - With new version of EKS, it is important to install "driver" that enables your EKS cluster to access EBS.
+
+1) EKS Driver 
+
+Step 1:
+eksctl utils associate-iam-oidc-provider --region=YOUR-REGION --cluster=YourClusterNameHere --approve
+eksctl utils associate-iam-oidc-provider --region=ap-south-1 --cluster=aqtcluster --approve
+
+Step 2:
+eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster YourClusterNameHere --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve  --role-only  --role-name AmazonEKS_EBS_CSI_DriverRole
+eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster aqtcluster --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve  --role-only  --role-name AmazonEKS_EBS_CSI_DriverRole
+
+Step 3:
+eksctl create addon --name aws-ebs-csi-driver --cluster YourClusterNameHere --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
+eksctl create addon --name aws-ebs-csi-driver --cluster aqtcluster --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
+
+
+
+2) Install Storage and PVC via aws-ebs
+kubectl apply -f storage-aws.yaml
+kubectl apply -f mongo-stack.yaml
+
+3) Install rest workloads.yaml and services.yaml
+kubectl apply -f .
+-----------------------------------------------------------------------------------------------------------------------------------------
+dckr_pat_6vAkq2ZMwfx32HKCF4ut9uKHOBY
+
+
