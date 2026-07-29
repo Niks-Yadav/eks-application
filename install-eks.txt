@@ -109,7 +109,42 @@ kubectl apply -f .
 
 4) Delete cluster
 eksctl delete cluster democluster
------------------------------------------------------------------------------------------------------------------------------------------
-dckr_pat_6vAkq2ZMwfx32HKCF4ut9uKHOBY
-----------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+***** With new Retail AWS account ********
+IAM policy part is not needed as we will run setup via Power user of AWS which is granted during onboarding.
+
+At Last, load balancer was there with DNS but not running the application, the issue was load balancer controller was not installed. It can be installed via this command -
+
+Install HELM first from google and then fire below command.
+
+# Add the EKS chart repo
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+# Install the controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=<YOUR_CLUSTER_NAME> \
+  --set serviceAccount.create=true \
+  --set region=<YOUR_REGION> \
+  --set vpcId=<YOUR_VPC_ID>
+
+e.g.
+# Add the EKS chart repo
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+# Install the controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=democluster\
+  --set serviceAccount.create=true \
+  --set region=ap-south-1 \
+  --set vpcId=vpc-019134d9c1d0277a3 \
+
+Load Balancer URL will work afterthat....
+---------------------------------------------------------------------------------------------------------
+
+
+-------------------------------------------------------------------------------------------------------------
 
