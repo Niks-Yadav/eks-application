@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: queue
   replicas: 1
-  template: # template for the pods
+  template: # template for the pods definitiion
     metadata:
       labels:
         app: queue

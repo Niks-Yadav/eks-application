@@ -12,6 +12,7 @@ sudo mv /tmp/eksctl /usr/local/bin
 
 
 --- Install awscli (With EC2 instance, it comes with awscli)
+-- not needed
 aws --version (should be greated that 1.18.86)
 [ec2-user@ip-172-31-45-13 ~]$ aws --version
 aws-cli/1.18.147 Python/2.7.18 Linux/5.10.205-195.807.amzn2.x86_64 botocore/1.18.6

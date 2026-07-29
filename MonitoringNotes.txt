@@ -1,7 +1,7 @@
 https://github.com/prometheus-community/helm-charts
 kube-prometheus-stack
 
-1) Install HELM first via below script provided by HELM Community-
+1) Install HELM first via below script provided by HELM Community by others.
 https://helm.sh/docs/intro/install/
 
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3

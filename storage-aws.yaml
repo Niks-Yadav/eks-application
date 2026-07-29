@@ -10,7 +10,7 @@ spec:
     requests:
       storage: 7Gi
 ---
-# Storage class definition for AWS EBS
+# Storage class definition for AWS EBS services. This is used to dynamically provision persistent volumes for the MongoDB database.
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
