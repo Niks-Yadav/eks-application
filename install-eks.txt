@@ -75,9 +75,6 @@ kubectl version --client
 4. Create EKS Cluster now -
 eksctl create cluster --name democluster --nodes-min=3
 
-eksctl create cluster --name democluster --region ap-south-1 --nodegroup-name standard-workers --node-type t2.micro --nodes 3 --nodes-min 3 --nodes-max 4 --managed
-
-
 ---------------------------------------------------------------------------------------------------------------------
 Operating your cluster - With new version of EKS, it is important to install "driver" that enables your EKS cluster to access EBS.
 
