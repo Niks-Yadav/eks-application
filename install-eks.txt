@@ -105,7 +105,11 @@ kubectl apply -f mongo-stack.yaml
 
 3) Install rest workloads.yaml and services.yaml
 kubectl apply -f .
+
+
+4) Delete cluster
+eksctl delete cluster democluster
 -----------------------------------------------------------------------------------------------------------------------------------------
 dckr_pat_6vAkq2ZMwfx32HKCF4ut9uKHOBY
-
+----------------------------------------------------------------
 
