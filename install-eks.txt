@@ -1,7 +1,9 @@
-https://github.com/eksctl-io/eksctl
+Install git as well so that code can be checked out on EC2 machine -
+sudo yum install -y
+sudo yum install git -y
 
 1. Install EKSCTL and AWSCLI -
-eksctl Installation -
+eksctl Installation - https://github.com/eksctl-io/eksctl
 # for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
 
 ARCH=amd64
