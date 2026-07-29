@@ -94,6 +94,9 @@ eksctl create addon --name aws-ebs-csi-driver --cluster YourClusterNameHere --se
 e.g.
 eksctl create addon --name aws-ebs-csi-driver --cluster democluster --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
 
+step 4: If needed for retail AWS account
+eksctl create addon --cluster democluster --name eks-pod-identity-agent
+
 
 
 2) Install Storage and PVC via aws-ebs
